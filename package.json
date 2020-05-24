@@ -1,6 +1,6 @@
 {
   "name": "wca-bot",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A bot to check WCA results",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,7 @@
   "author": "Tushar Singh Jamwal",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "discord.js": "^12.2.0"
+    "discord.js": "^12.2.0",
+    "node-fetch": "^2.6.0"
   }
 }
