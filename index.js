@@ -1,11 +1,11 @@
-const Discord = require('discord.js')
-const bot = Discord.Client()
-const token = ''
+const Discord = require('discord.js');
+const bot = new Discord.Client();
+const token = '';
 
-const PREFIX= 'wca?'
+const PREFIX= 'wca?';
 
 bot.on('message', msg=>{
-    if(msg.content.substring(0,PREFIX.length-1)===PREFIX){
+    if(msg.content.substring(0,PREFIX.length)===PREFIX){
 
         let args = msg.content.substring(PREFIX.length).split(" ");
         switch(args[0]){
@@ -19,7 +19,8 @@ bot.on('message', msg=>{
             case 'search':
 
             //add code to search for people using https://www.worldcubeassociation.org/api/v0/search/users?persons_table=true&q=
-    }
+        }
+    }    
 })
 
 bot.login(token)
