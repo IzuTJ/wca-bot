@@ -33,11 +33,11 @@ bot.on('message', async msg=>{
 			qry = args[1];
 			requestUrl = apiUrl + search + qry;
 			result = await fetch(requestUrl).then(response => response.json());
-			msg.reply(cuberName(result));
+			msg.channel.send(cuberEmbed(result));
 			break;
 
 		case 'help':
-			msg.reply(help);
+			msg.channel.send(help);
 			break;
 
 		case 'test':
@@ -55,9 +55,14 @@ bot.on('message', async msg=>{
 making the switch structure for commands cleaner and easier to understand*/
 // I will put the list of functions that accepts json objects as arguments under this
 // have to detach the discord message from this
-function cuberName(jsonObj){
+function cuberEmbed(jsonObj){
 	result = jsonObj['result'];
 	const cuber = result[0];
-	return cuber['name'];
+	const embed = new Discord.MessageEmbed()
+		.setTitle(cuber['name'])
+		.setImage(cuber.avatar.thumb_url)
+		.addField('WCA id', cuber['wca_id'])
+		.addField('Country', cuber.country_iso2);
+	return embed;
 }
 bot.login(token);
