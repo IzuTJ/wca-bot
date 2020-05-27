@@ -17,7 +17,7 @@ const help = new Discord.MessageEmbed()
 	.addField(PREFIX + 'search', 'Searches for WCA profiles based on their name or WCA id\nExample: `' + PREFIX + ' 2015JAMW`')
 	.addField(PREFIX + 'test', 'Asks the WCA bot if it is listening. It will reply to you if it is.');
 
-bot.on('ready', () => {
+bot.on('ready', () =>{
 	console.log('I am ready!');
 });
 
@@ -32,8 +32,14 @@ bot.on('message', async msg=>{
 		case 'search':
 			qry = args[1];
 			requestUrl = apiUrl + search + qry;
-			result = await fetch(requestUrl).then(response => response.json());
-			msg.channel.send(cuberEmbed(result));
+			try{
+				result = await fetch(requestUrl).then(response => response.json());
+				msg.channel.send(cuberEmbed(result));
+			}
+			catch(e){
+				msg.channel.send('The server did not respond. Please try again later.\nIf error persists, notify the devs so they can look into it.');
+				console.log(e);
+			}
 			break;
 
 		case 'help':
