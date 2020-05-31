@@ -7,33 +7,34 @@ const bot = new Discord.Client();
 const apiUrl = 'https://www.worldcubeassociation.org/api/v0/';
 const search = 'search/users?persons_table=true&q=';
 let requestUrl = '';
-let qry = '';
-let result;
 
 const help = new Discord.MessageEmbed()
 	.setTitle('**WCA Bot Commands**')
 	.setColor(0xff3e15)
 	.setDescription('All commands must have the "wca?" prefix followed by the command name without any space.')
-	.addField(PREFIX + 'search', 'Searches for WCA profiles based on their name or WCA id\nExample: `' + PREFIX + ' 2015JAMW`')
+	.addField(PREFIX + 'search', 'Searches for WCA profiles based on their name or WCA id\nExample: `' + PREFIX + 'search 2015JAMW`')
 	.addField(PREFIX + 'test', 'Asks the WCA bot if it is listening. It will reply to you if it is.');
 
 bot.on('ready', () =>{
 	console.log('I am ready!');
 });
 
-bot.on('message', async msg=>{
+bot.on('message', async msg =>{
 	if(msg.content.substring(0, PREFIX.length) === PREFIX){
 
 		const args = msg.content.substring(PREFIX.length).split(' ');
+		let qry = '';
 
 		switch(args[0]){
 		// a case for every supported bot command
 
 		case 'search':
-			qry = args[1];
+			for(let i = 1; i < args.length; i++){
+				qry += '%20' + args[i];
+			}
 			requestUrl = apiUrl + search + qry;
 			try{
-				result = await fetch(requestUrl).then(response => response.json());
+				const result = await fetch(requestUrl).then(request => request.json());
 				msg.channel.send(cuberEmbed(result));
 			}
 			catch(e){
@@ -62,8 +63,7 @@ making the switch structure for commands cleaner and easier to understand*/
 // I will put the list of functions that accepts json objects as arguments under this
 // have to detach the discord message from this
 function cuberEmbed(jsonObj){
-	result = jsonObj['result'];
-	const cuber = result[0];
+	const cuber = jsonObj['result'][0];
 	const embed = new Discord.MessageEmbed()
 		.setTitle(cuber['name'])
 		.setImage(cuber.avatar.thumb_url)
