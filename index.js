@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const { PREFIX, token } = require('./config.json');
+const file = new Discord.MessageAttachment('./assets/WCALogo.png');
 
 const bot = new Discord.Client();
 
@@ -34,11 +35,28 @@ bot.on('message', async msg =>{
 			}
 			requestUrl = apiUrl + search + qry;
 			try{
-				const result = await fetch(requestUrl).then(request => request.json());
-				msg.channel.send(cuberEmbed(result));
+				const resultJson = await fetch(requestUrl).then(request => request.json());
+				const result = resultJson['result'];
+
+				if(result.length == 0) {
+					msg.channel.send('No results were found.');
+				}
+				else if(result.length == 1) {
+					msg.channel.send(cuberEmbed(result));
+				}
+				else {
+					const searchList = createSearchList('Search Results');
+					for(let i = 0; i < result.length && i < 5; i++) {
+						searchList
+							.addField('Name', result[i]['name'], true)
+							.addField('WCA id', result[i]['wca_id'], true)
+							.addField('Country', result[i]['country_iso2'], true);
+					}
+					msg.channel.send({files: [file], embed: searchList});
+				}
 			}
 			catch(e){
-				msg.channel.send('The server did not respond. Please try again later.\nIf error persists, notify the devs so they can look into it.');
+				msg.channel.send('An error was encountered during the search.\nIf error persists, notify the devs so they can look into it.');
 				console.log(e);
 			}
 			break;
@@ -62,13 +80,18 @@ bot.on('message', async msg =>{
 making the switch structure for commands cleaner and easier to understand*/
 // I will put the list of functions that accepts json objects as arguments under this
 // have to detach the discord message from this
-function cuberEmbed(jsonObj){
-	const cuber = jsonObj['result'][0];
+function cuberEmbed(result){
+	const cuber = result[0];
 	const embed = new Discord.MessageEmbed()
 		.setTitle(cuber['name'])
 		.setImage(cuber.avatar.thumb_url)
 		.addField('WCA id', cuber['wca_id'])
 		.addField('Country', cuber.country_iso2);
 	return embed;
+}
+function createSearchList(listName){
+	return new Discord.MessageEmbed()
+		.setTitle(listName)
+		.setThumbnail('attachment://WCALogo.png');
 }
 bot.login(token);

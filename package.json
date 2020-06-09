@@ -1,6 +1,6 @@
 {
   "name": "wca-bot",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "A bot to check WCA results",
   "main": "index.js",
   "scripts": {
