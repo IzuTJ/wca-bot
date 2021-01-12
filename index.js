@@ -52,7 +52,7 @@ bot.on('message', async msg =>{
 							.addField('WCA id', result[i]['wca_id'], true)
 							.addField('Country', result[i]['country_iso2'], true);
 					}
-					msg.channel.send({files: [file], embed: searchList});
+					msg.channel.send({ files: [file], embed: searchList });
 				}
 			}
 			catch(e){
